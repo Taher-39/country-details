@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country-Details</title>
+    <style>
+        #div{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 20px;
+        }
+        .countryItem{
+            border: 2px solid tomato;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            background-color: gray;
+            box-shadow: 1px 1px 10px gray;
+        }
+        .h2Style{
+            font-size: 45px;
+            color: honeydew;
+        }
+        #div p{
+            color: honeydew;
+            font-size: 25px;
+        }
+        button{
+            width: 120px;
+            height: 38px;
+            border-radius: 20px;
+            border-width: 0px;
+            outline: 0;
+            box-shadow: 1px 1px 5px yellow;
+        }
+        #details{
+            
+        }
+        #details img{
+            width: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">This is Counrty Details Web</h1>
+    <div id="details">
+
+    </div>
+    <div id="div"></div>
+    <script>
+        fetch('https://restcountries.eu/rest/v2/all')
+            .then(res => res.json())
+            .then(data => {
+                countryCapital(data);
+            });
+
+            function countryCapital(data) {
+                const mainDiv = document.getElementById('div');
+                //forEach()
+                // data.forEach(element => {
+                //     const divItem = document.createElement('div');
+                //     divItem.className = 'countryItem';
+                //      const countryDetails = `
+                //         <h2 class="h2Style">${element.name}</h2>
+                //         <p>${element.capital}</p>
+                //     `;
+                //     divItem.innerHTML = countryDetails;
+                //     mainDiv.appendChild(divItem);
+                // });
+            
+                //for loop Solve....
+                for (let i = 0; i < data.length; i++) {
+                    const item = data[i];
+                    const divItem = document.createElement('div');
+                    divItem.className = 'countryItem'
+                    const countryDetails = `
+                        <h2 class="h2Style">${item.name}</h2>
+                        <p>${item.capital}</p>
+                        <button onclick="detailsData('${item.name}')">Details</button>
+                    `;
+                    divItem.innerHTML = countryDetails;
+                    mainDiv.appendChild(divItem);
+                }
+            }
+
+            function detailsData(name){
+                const url = `https://restcountries.eu/rest/v2/name/${name}`;
+                fetch(url)
+                .then(res => res.json())
+                .then(data => indetailsData(data[0]))    
+            }
+            function indetailsData(data){
+            const detailsArea = document.getElementById('details');
+            detailsArea.innerHTML = `
+                    <h2>${data.name}</h2>
+                    <p>Region: ${data.region}</p>
+                    <p>Area: ${data.area}</p>
+                    <img src="${data.flag}">
+                `;
+            }
+    </script>
+</body>
+</html>
